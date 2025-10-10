@@ -71,6 +71,7 @@ export async function allFutureEvents(
   const events = await notion.databases
     .query({
       database_id: "030ee6a0cbbf40bc9b5cbae4001f0d8e",
+      sorts: [{ timestamp: "created_time", direction: "descending" }],
     })
     .then(decodeQueryResponse)
     .then((response) => response.results)
