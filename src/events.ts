@@ -39,7 +39,7 @@ const decodeEventPage = record({
       promo: field("Promovat", checkboxProp),
       zruseno: field("Zrušeno", checkboxProp),
       zverejnit: field("Zveřejnit", checkboxProp),
-    })
+    }),
   ),
 });
 
@@ -61,18 +61,19 @@ export interface Event {
 }
 
 export async function allFutureEvents(
-  apiKey = process.env.NOTION_API_KEY
+  apiKey = process.env.NOTION_API_KEY,
 ): Promise<Event[]> {
   const decodeQueryResponse = record({
     object: literal("list"),
     results: array(decodeEventPage),
   });
   const notion = new Client({ auth: apiKey });
-  const events = await notion.databases
-    .query({
-      database_id: "030ee6a0cbbf40bc9b5cbae4001f0d8e",
-      sorts: [{ timestamp: "created_time", direction: "descending" }],
-    })
+  const events = await notion.dataSources.query({
+      data_source_id: "50b5c4c3-7236-43b5-ab27-f1446fb9ce63",
+      sorts: [
+        { property: "Kdy přesně", direction: "descending" },
+      ],
+  })
     .then(decodeQueryResponse)
     .then((response) => response.results)
     .then((pages) => pages.map(unwrapEventPage))
